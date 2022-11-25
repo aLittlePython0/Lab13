@@ -4,73 +4,111 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*Описати базовий клас (можливо, абстрактний), у якому за допомогою
-віртуальних або абстрактних методів та властивостей задається інтерфейс для
-похідних класів.
-В усіх класах потрібно перевизначити метод Equals, щоби порівнювались
-значення, а не посилання. Визначити в класах усі можливі конструктори.
-Метод Main повинен утримувати масив або список з елементів базового
-класу, заповнений посиланнями на похідні класи, та демонструвати
-використання усіх розроблених елементів класів відповідно варіанту.
-Показати на прикладі одного з методів, присутніх у кожному класі,
-використання поліморфізму.
-Обов’язково продемонструвати різницю між раннім та пізнім зв’язуванням
-
-1. Квіткарка. Визначити ієрархію квітів. Створити кілька об'єктів-квітів.
-Зібрати букет з визначенням його вартості.*/
-
-namespace Lab13
+namespace ConsoleApp2
 {
-    class Flowers
+    class Vehicle
     {
-        public string Name { get; set; }
-        public string Color { get; set; }
-        public Flowers(string name, string color)
+        protected string Name { get; set; }
+        protected int PassangersMin { get; set; }
+        protected int PassangersMax { get; set; }
+        protected int SpeedMax { get; set; }
+        protected int Price { get; set; }
+        public virtual void GetInfo() { }
+    }
+
+    class Plane : Vehicle
+    {
+        public Plane() { }
+        public Plane(string Name, int PassangersMin, int PassangersMax, int SpeedMax)
         {
-            Name = name;
-            Color = color;
+            this.Name = Name;
+            this.PassangersMin = PassangersMin;
+            this.PassangersMax = PassangersMax;
+            this.SpeedMax = SpeedMax;
         }
-        public virtual void Display()
+
+        public override void GetInfo()
         {
-            Console.WriteLine($"{Name} {Color}");
+            Console.WriteLine($"{Name}, Passangers Min: {PassangersMin}, Passangers Max: {PassangersMax}, Speed: {SpeedMax} km/h\n");
         }
     }
-    class Rose : Flowers
+
+    class PassengerPlane : Plane
     {
-        public string Therapeutic_Properties { get; set; }
-        public Rose(string name, string color, string therapeutic_properties) : base(name, color)
+        public PassengerPlane(string Name, int PassangersMin, int PassangersMax, int SpeedMax, int Price)
         {
-            Therapeutic_Properties = therapeutic_properties;
+            this.Name = Name;
+            this.PassangersMin = PassangersMin;
+            this.PassangersMax = PassangersMax;
+            this.SpeedMax = SpeedMax;
+            this.Price = Price;
         }
-        public override void Display()
+
+        public override void GetInfo()
         {
-            Console.WriteLine
-            ($"{Name} {Color} {Therapeutic_Properties}");
+            Console.WriteLine($"{Name}, Passangers Min: {PassangersMin}, Passangers Max: {PassangersMax}, Speed: {SpeedMax} km/h, Price: {Price} milion $\n");
         }
     }
-    class Tupil : Flowers
+
+    class MilitaryPlane : Plane
     {
-        public string Season { get; set; }
-        public Tupil(string name, string color, string season) : base(name, color)
+        protected string Weapon { get; set; }
+        public MilitaryPlane(string Name, int PassangersMax, int SpeedMax, int Price, string Weapon)
         {
-            Season = season;
+            this.Name = Name;
+            this.PassangersMax = PassangersMax;
+            this.SpeedMax = SpeedMax;
+            this.Price = Price;
+            this.Weapon = Weapon;
         }
-        public override void Display()
+
+        public override void GetInfo()
         {
-            Console.WriteLine
-            ($"{Name} {Color} {Season}");
+            Console.WriteLine($"{Name}, Crew: {PassangersMax}, Speed Max: {SpeedMax} km/h, Price: {Price} milion $,\nWeapon:{Weapon}\n");
         }
     }
+
+
+    class TransportPlane : Plane
+    {
+        public TransportPlane(string Name, int PassangersMin, int PassangersMax, int SpeedMax, int Price)
+        {
+            this.Name = Name;
+            this.PassangersMin = PassangersMin;
+            this.PassangersMax = PassangersMax;
+            this.SpeedMax = SpeedMax;
+            this.Price = Price;
+        }
+
+        public override void GetInfo()
+        {
+            Console.WriteLine($"{Name}, Passangers Min: {PassangersMin}, Passangers Max: {PassangersMax}, Speed Max: {SpeedMax} km/h, Price: {Price} milion $\n");
+        }
+    }
+
+
     class Program
     {
         static void Main(string[] args)
         {
-            Flowers p1 = new Flowers("name", "color");
-            p1.Display();
-            Rose p2 = new Rose("rose", "red", "disinfection of wounds");
-            p2.Display();
-            Tupil p3 = new Tupil("tupil", "yellow", "summer");
-            p3.Display();
+            Vehicle s = new Plane("Plane", 1, 2000, 11230);
+            s.GetInfo();
+
+            Plane[] A = new Plane[3];
+            PassengerPlane B = new PassengerPlane("Airbus A380", 525, 853, 903, 360);
+            MilitaryPlane C = new MilitaryPlane("F-22 Raptor", 1, 2414, 379, "gun M61A2 Vulcan, Air-to-air missiles,JDAM guided bombs ");
+            TransportPlane D = new TransportPlane("An - 225 Mriya", 6, 70, 850, 800);
+            A[0] = B;
+            A[1] = C;
+            A[2] = D;
+
+            for (int i = 0; i < 3; i++)
+            {
+                A[i].GetInfo();
+            }
+
         }
     }
+
+
 }
